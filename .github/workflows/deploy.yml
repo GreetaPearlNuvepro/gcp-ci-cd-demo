@@ -12,17 +12,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Google Cloud SDK
+    - name: Authenticate with GCP
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        install_components: 'beta'
 
     - name: Configure Docker for Artifact Registry
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
 
-    - name: Build and Push Docker Image
+    - name: Build and Push Docker image
       run: |
         docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/flask-app .
         docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/flask-app
