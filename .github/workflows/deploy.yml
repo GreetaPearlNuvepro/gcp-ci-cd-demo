@@ -23,6 +23,9 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         install_components: 'beta'
 
+    - name: Echo project ID
+      run: echo "Project ID: ${{ secrets.GCP_PROJECT_ID }}"
+
     - name: Configure Docker for Artifact Registry
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
